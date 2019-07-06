@@ -13,10 +13,22 @@ export class GstGetComponent implements OnInit {
 
   businesses: Business[];
 
-  constructor(private gstService: GSTService) { }
+  constructor(private gstService: GSTService) { 
+
+  }
 
   ngOnInit() {
-    this.getBusiness();
+  
+  
+      this.gstService.getBusinesses().subscribe((data:Business[])=>{
+      console.log(" asdddddddddd"+data);
+        this.businesses=data;
+      });
+  
+    this.gstService.businessChanged.subscribe((data:Business[])=>{
+    console.log(" asdddddddddd"+data);
+      this.businesses=data;
+    })
   }
 
   deleteBusiness(id) {
@@ -26,11 +38,11 @@ export class GstGetComponent implements OnInit {
     });
   }
 
-  getBusiness() {
+  /* getBusiness() {
     this.gstService.getBusinesses().subscribe((data: Business[]) => {
       this.businesses = data;
     });
-  }
+  } */
 
 
 
