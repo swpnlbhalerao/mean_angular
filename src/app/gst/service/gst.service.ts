@@ -12,7 +12,7 @@ business:Business[];
 
 
   businessChanged=new Subject<Business[]>();
-  uri = 'http://localhost:4000/business';
+  //uri = 'http://localhost:4000/business';
 
   constructor(private http: HttpClient,private appService:AppService) { }
 
@@ -23,30 +23,21 @@ business:Business[];
       business_gst_number: business_gst_number
     };
     console.log(obj);
-    /* this.http.post(`${this.uri}/add`, obj)
-      .subscribe(res => console.log('Done')); */
       this.appService.postData('/business/add',null,obj).subscribe(res => console.log('Done'));
-
-      this.getBusinesses();
- 
     }
 
   getBusinesses() {
-  
-        return this.appService.fetchData('/business',null)/* .subscribe((data:Business[])=>{
-        console.log(" dsdsdss"+data);
-          this.business=data;
-        }); */
-       // console.log(this.business);
-      //  return this.business;
+   return this.appService.fetchData('/business',null);
 
   }
 
 
   editBusiness(id) {
-    return this
+   /*  return this
       .http
-      .get(`${this.uri}/edit/${id}`);
+      .get(`${this.uri}/edit/${id}`); */
+
+      return this.appService.fetchData(`/business/edit/${id}`,null)
     
 
   }
@@ -59,18 +50,23 @@ business:Business[];
       business_name: business_name,
       business_gst_number: business_gst_number
     };
-    this
+    /* this
       .http
-      .post(`${this.uri}/update/${id}`, obj)
+      .post(`${this.uri}/update/${id}`, obj) */
+
+      this.appService.postData(`/business/update/${id}`,null,obj)
       .subscribe(res => console.log('Done'));
   }
 
   // business.service.ts
 
   deleteBusiness(id) {
-    return this
+    /* return this
       .http
-      .get(`${this.uri}/delete/${id}`);
+      .get(`${this.uri}/delete/${id}`); */
+
+      return this.appService.fetchData(`/business/delete/${id}`,null)
+
   }
 
 }
