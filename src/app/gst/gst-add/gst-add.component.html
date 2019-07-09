@@ -1,6 +1,18 @@
+<div class="alert alert-danger" *ngIf="errorMessage">
+  <div class="alert-items">
+      <div class="alert-item static">
+          <div class="alert-icon-wrapper">
+             <!--  <clr-icon class="alert-icon" shape="exclamation-circle"></clr-icon> -->
+          </div>
+          <span class="alert-text">
+              {{errorMessage}}
+          </span>
+      </div>
+  </div>
+</div>
 <div class="card">
   <div class="card-body">
-    <form [formGroup]="angForm" novalidate>
+    <form [formGroup]="angForm" novalidate  (ngSubmit)="addBusiness()">
       <div class="form-group">
         <label class="col-md-4">Person Name</label>
         <input type="text" class="form-control" formControlName="person_name" #person_name />
@@ -29,11 +41,16 @@
         </div>
       </div>
       <div class="form-group">
-        <button (click)="addBusiness(person_name.value, business_name.value, business_gst_number.value)"
+       <!--  <button (click)="addBusiness(person_name.value, business_name.value, business_gst_number.value)"
             [disabled]="angForm.pristine || angForm.invalid" 
             class="btn btn-primary">
             Add Business
-         </button>
+         </button> -->
+         <button
+         [disabled]="angForm.pristine || angForm.invalid" 
+         class="btn btn-primary">
+         Add Business
+      </button>
     </div>
     </form>
   </div>

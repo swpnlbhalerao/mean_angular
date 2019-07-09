@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GSTService } from '../service/gst.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gst-edit',
@@ -13,6 +14,10 @@ export class GstEditComponent implements OnInit {
 
   business: any = {};
   angForm: FormGroup;
+  subs$  :Subscription
+  editSubs$  :Subscription
+  errorMessage:string=''; 
+  
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -31,19 +36,47 @@ export class GstEditComponent implements OnInit {
 
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+   this.editSubs$ = this.route.params.subscribe(params => {
       this.gstService.editBusiness(params['id']).subscribe(res => {
         this.business = res;
+      },err=>{
+        this.errorMessage=err;
+        console.log('Error Sw  : '+err);
       });
     });
   }
 
-  updateBusiness(person_name, business_name, business_gst_number) {
+  updateBusiness() {
+    let  businessData =this.angForm.value;  
     this.route.params.subscribe(params => {
-      this.gstService.updateBusiness(person_name, business_name, business_gst_number, params['id']);
-      this.router.navigate(['business']);
+      console.log(params);
+      this.gstService.updateBusiness(businessData.person_name,businessData.business_name, businessData.business_gst_number, params['id']) .subscribe(res =>{
+         console.log('Done')
+         this.router.navigateByUrl('business');
+      }
+      ,err=>{
+        this.errorMessage=err;
+        console.log('Error Sw  : '+err);
+      });
+     
     });
 
+   
+
+
+
+
+
+
   }
+
+
+  ngOnDestroy(){
+  //  this.subs$.unsubscribe();
+    this.editSubs$.unsubscribe();
+      }
+    
+
+
 }
 

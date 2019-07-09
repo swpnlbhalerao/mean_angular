@@ -1,20 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, Event } from '@angular/router';
+import { AuthService } from './auth/auth-service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'crudDemo';
 
-  constructor(private _loadingBar: SlimLoadingBarService, private _router: Router) {
+
+
+
+  constructor(private _loadingBar: SlimLoadingBarService, private _router: Router,private authservice:AuthService) {
     this._router.events.subscribe((event: Event) => {
       this.navigationInterceptor(event);
     });
   }
+
+  ngOnInit(){
+
+    this.authservice.authLogin();
+  }
+
   private navigationInterceptor(event: Event): void {
     if (event instanceof NavigationStart) {
       this._loadingBar.start();

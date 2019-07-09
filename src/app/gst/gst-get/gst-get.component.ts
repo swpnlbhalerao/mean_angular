@@ -1,49 +1,55 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import Business from '../model/Business';
 import { GSTService } from '../service/gst.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gst-get',
   templateUrl: './gst-get.component.html',
   styleUrls: ['./gst-get.component.css']
 })
-export class GstGetComponent implements OnInit {
+export class GstGetComponent implements OnInit,OnDestroy {
 
 
 
   businesses: Business[];
+  subs:Subscription;
+  errorMessage:string='';
 
-  constructor(private gstService: GSTService) { 
+  constructor(private gstService: GSTService) {
 
   }
 
   ngOnInit() {
-  
-  
-      this.gstService.getBusinesses().subscribe((data:Business[])=>{
-      console.log(" asdddddddddd"+data);
-        this.businesses=data;
-      });
-  
-    this.gstService.businessChanged.subscribe((data:Business[])=>{
-    console.log(" asdddddddddd"+data);
-      this.businesses=data;
-    })
-  }
+
+    this.getBusiness();
+
+   /*  this.gstService.businessData$.subscribe((data: Business[]) => {
+      console.log(" business Data Observalble " + data);
+      this.businesses = data;
+    })*/
+  } 
 
   deleteBusiness(id) {
     this.gstService.deleteBusiness(id).subscribe(res => {
-      //  this.getBusiness();
+       this.getBusiness();
       console.log('Deleted');
     });
   }
 
-  /* getBusiness() {
-    this.gstService.getBusinesses().subscribe((data: Business[]) => {
+ getBusiness() {
+  
+    this.subs = this.gstService.getBusinesses().subscribe((data: Business[]) => {
+      console.log(" Business data service call from get component");
       this.businesses = data;
+    },error=>{
+      this.errorMessage=error
     });
-  } */
+  
+  } 
 
-
+ngOnDestroy(){
+  this.subs.unsubscribe();
+}
 
 }
